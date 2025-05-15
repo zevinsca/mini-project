@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionStatus {
+  PAID
+  PENDING
+  FAILED
+}
+
+enum TicketType {
+  FREE
+  PAID
+}
+
+enum Role {
+  ADMIN
+  EVENT_ORGANIZER
+  PARTICIPANT
+}
+
+model Event {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  location    String
+  price       Float
+  discountId  String
+  stock       Int
+  ticketTypes TicketType
+  reviewId    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  EventCategory EventCategory[]
+  Image         Image[]
+  Transaction   Transaction[]
+  Ticket        Ticket[]
+  Review        Review[]
+  Discount      Discount[]
+  Voucher       Voucher[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  phone        Int
+  role         Role     @default(PARTICIPANT)
+  referralCode String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  Transaction Transaction[]
+  Point       Point[]
+  Review      Review[]
+  Ticket      Ticket[]
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  EventCategory EventCategory[]
+}
+
+model EventCategory {
+  id         String   @id @default(uuid())
+  eventId    String
+  categoryId String
+  Event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  Category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, categoryId])
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  imageUrl  String
+  eventId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Event Event @relation(fields: [eventId], references: [id])
+}
+
+model Ticket {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  name      String
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+
+  Event Event @relation(fields: [eventId], references: [id])
+  User  User  @relation(fields: [userId], references: [id])
+}
+
+model Transaction {
+  id        String            @id @default(uuid())
+  userId    String
+  eventId   String
+  status    TransactionStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+
+  User   User     @relation(fields: [userId], references: [id])
+  Event  Event    @relation(fields: [eventId], references: [id])
+  Review Review[]
+}
+
+model Point {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    Int
+  expiredAt DateTime
+  createdAt DateTime @default(now())
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+model Discount {
+  id         String   @id @default(uuid())
+  usageLimit Int
+  amount     Int
+  eventId    String
+  expiredAt  DateTime
+  createdAt  DateTime @default(now())
+
+  Event Event @relation(fields: [eventId], references: [id])
+}
+
+model Voucher {
+  id         String   @id @default(uuid())
+  code       String   @unique
+  usageLimit Int
+  eventId    String
+  amount     Int
+  expiredAt  DateTime
+  createdAt  DateTime @default(now())
+
+  Event Event @relation(fields: [eventId], references: [id])
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  userId        String
+  transactionId String
+  eventId       String
+  content       String
+  rating        Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  User        User        @relation(fields: [userId], references: [id])
+  Transaction Transaction @relation(fields: [transactionId], references: [id])
+  Event       Event       @relation(fields: [eventId], references: [id])
+}
