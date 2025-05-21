@@ -33,6 +33,7 @@ enum Role {
 model Event {
   id               String     @id @default(uuid())
   name             String
+  slug             String     @unique
   userId           String
   shortDescription String
   description      String
