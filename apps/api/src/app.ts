@@ -1,11 +1,15 @@
+import "dotenv/config";
+
 import express, { Request, Response, Application } from "express";
 import authRouters from "./routers/auth-router.js";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 
 const app: Application = express();
 const PORT: number = 8000;
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 app.get("/api/v1/health", (_req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../../generated/prisma/index.js";
+import { PrismaClient } from "../generated/prisma/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { registerSchema } from "../validations/auth-validation.js";
@@ -45,6 +45,7 @@ export async function register(req: Request, res: Response) {
     if (!referralCode) {
       throw new Error("Referral code was not generated");
     }
+
     // Create user
     await prisma.user.create({
       data: {
@@ -109,6 +110,7 @@ export async function login(req: Request, res: Response) {
       return;
     }
 
+    //PAYLOAD
     const JWTToken = jwt.sign(
       {
         id: existingUser.id,

@@ -22,5 +22,5 @@ export const registerSchema = z.object({
     .regex(/[0-9]/, "Password must contain one number")
     .regex(/[^A-Za-z0-9]/, "Password must contain one symbol"),
   phone: z.string().max(15, "invalid phone number"),
-  referralCode: z.string().min(5, "invalid referal code"),
+  referralCode: z.string().min(0, "invalid referal code"),
 });
