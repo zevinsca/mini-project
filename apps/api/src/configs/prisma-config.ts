@@ -1,5 +1,7 @@
-// const globalThisPrisma = globalThis as unknown as { prisma?: PrismaClient };
+import { PrismaClient } from "../../generated/prisma/index.js";
 
-// export const prisma = globalThisPrisma.prisma || new PrismaClient();
+const globalThisPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-// globalThisPrisma.prisma = prisma;
+export const prisma = globalThisPrisma.prisma || new PrismaClient();
+
+globalThisPrisma.prisma = prisma;
