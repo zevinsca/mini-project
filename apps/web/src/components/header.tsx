@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { IoClose } from "react-icons/io5";
+import { useState, useEffect } from "react";
+import { IoClose, IoContractOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 import Link from "next/link";
@@ -11,8 +11,36 @@ import Image from "next/image";
 //   name: string;
 // }
 
+interface CurrentUser {
+  id: string;
+  firstName: string;
+  username: string;
+  email: string;
+  role: string;
+}
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentData, setCurrentData] = useState<CurrentUser | null>(null);
+
+  useEffect(() => {
+    async function getCurrentUser() {
+      try {
+        const res = await fetch(
+          "http://localhost:8000/api/v1/user/current-user",
+          { credentials: "include" }
+        );
+        const data = await res.json();
+        setCurrentData(data.data);
+        console.log(data);
+        console.log(currentData);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    }
+
+    getCurrentUser();
+  }, []);
+
   //   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   //   const [categories, setCategories] = useState([]);
 
@@ -62,6 +90,25 @@ export default function Header() {
             <li>
               <Link href="/about">About</Link>
             </li>
+
+            {currentData ? (
+              <div>
+                <p>{currentData.firstName} </p>
+              </div>
+            ) : (
+              <div>
+                <nav>
+                  <ul className="flex gap-10">
+                    <li>
+                      <Link href="/auth/login">Login</Link>
+                    </li>
+                    <li>
+                      <Link href="/auth/register">Register</Link>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            )}
             {/* <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -122,6 +169,12 @@ export default function Header() {
               </li>
               <li>
                 <Link href="/about">About</Link>
+              </li>
+              <li>
+                <Link href="/auth/login">Login</Link>
+              </li>
+              <li>
+                <Link href="/auth/register">Register</Link>
               </li>
               {/* <div className="relative ">
                 <button
