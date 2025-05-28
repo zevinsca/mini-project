@@ -1,0 +1,1 @@
+// isinya create event dari masing-masing eo, berlaku untuk semua eo
