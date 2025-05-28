@@ -12,6 +12,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (!accessToken)
+    return NextResponse.redirect(`${req.nextUrl.origin}/auth/login`);
+
   const { payload } = await jwtVerify(
     accessToken,
     new TextEncoder().encode(process.env.JWT_SECRET)
