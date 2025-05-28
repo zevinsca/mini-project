@@ -1,9 +1,9 @@
 import express, { Request, Response, Application } from "express";
 import { prisma } from "../configs/prisma-config.js";
 
-// import fs from "fs/promises";
+import fs from "fs/promises";
 
-import cloudinary from "../configs/cloudinary-config.js";
+import { cloudinary } from "../configs/cloudinary-config.js";
 
 export async function getAllEvents(req: Request, res: Response) {
   try {
@@ -22,6 +22,7 @@ export async function getAllEvents(req: Request, res: Response) {
         location: item.location,
         price: item.price,
         stock: item.stock,
+        imagePreview: item.imagePreview,
         TicketType: item.ticketTypes,
         salesStart: item.salesStart,
         salesEnd: item.salesEnd,

@@ -155,6 +155,8 @@ async function seed() {
         price: 500000,
         stock: 150,
         ticketTypes: "PAID",
+        imagePreview:
+          "https://res.cloudinary.com/dzdcqjvtc/image/upload/v1748341636/aleksandar-andreev-QgY8GB_ncZw-unsplash_xr8chz.jpg",
         salesStart: new Date("2025-06-01T00:00:00+07:00"),
         salesEnd: new Date("2025-08-11T23:59:59+07:00"),
         userId: userData[0].id,
@@ -172,6 +174,8 @@ async function seed() {
         price: 0,
         stock: 100,
         ticketTypes: "FREE",
+        imagePreview:
+          "https://res.cloudinary.com/dzdcqjvtc/image/upload/c_fill,g_auto,h_250,w_970/b_rgb:000000,e_gradient_fade,y_-0.50/c_scale,co_rgb:ffffff,fl_relative,l_text:montserrat_25_style_light_align_center:Shop%20Now,w_0.5,y_0.18/v1748341636/aleksandar-andreev-QgY8GB_ncZw-unsplash_xr8chz.jpg",
         salesStart: new Date("2025-08-01T00:00:00+07:00"),
         salesEnd: new Date("2025-09-29T23:59:59+07:00"),
         userId: userData[0].id,
@@ -189,6 +193,8 @@ async function seed() {
         price: 750000,
         stock: 200,
         ticketTypes: "PAID",
+        imagePreview:
+          "https://res.cloudinary.com/dzdcqjvtc/image/upload/c_fill,g_auto,h_250,w_970/b_rgb:000000,e_gradient_fade,y_-0.50/c_scale,co_rgb:ffffff,fl_relative,l_text:montserrat_25_style_light_align_center:Shop%20Now,w_0.5,y_0.18/v1748341636/aleksandar-andreev-QgY8GB_ncZw-unsplash_xr8chz.jpg",
         salesStart: new Date("2025-08-15T00:00:00+07:00"),
         salesEnd: new Date("2025-10-04T23:59:59+07:00"),
         userId: userData[0].id,
@@ -206,6 +212,8 @@ async function seed() {
         price: 1000000,
         stock: 300,
         ticketTypes: "PAID",
+        imagePreview:
+          "https://res.cloudinary.com/dzdcqjvtc/image/upload/c_fill,g_auto,h_250,w_970/b_rgb:000000,e_gradient_fade,y_-0.50/c_scale,co_rgb:ffffff,fl_relative,l_text:montserrat_25_style_light_align_center:Shop%20Now,w_0.5,y_0.18/v1748341636/aleksandar-andreev-QgY8GB_ncZw-unsplash_xr8chz.jpg",
         salesStart: new Date("2025-09-01T00:00:00+07:00"),
         salesEnd: new Date("2025-11-19T23:59:59+07:00"),
         userId: userData[0].id,
@@ -223,6 +231,9 @@ async function seed() {
         price: 250000,
         stock: 80,
         ticketTypes: "PAID",
+
+        imagePreview:
+          "https://res.cloudinary.com/dzdcqjvtc/image/upload/c_fill,g_auto,h_250,w_970/b_rgb:000000,e_gradient_fade,y_-0.50/c_scale,co_rgb:ffffff,fl_relative,l_text:montserrat_25_style_light_align_center:Shop%20Now,w_0.5,y_0.18/v1748341636/aleksandar-andreev-QgY8GB_ncZw-unsplash_xr8chz.jpg",
         salesStart: new Date("2025-07-01T00:00:00+07:00"),
         salesEnd: new Date("2025-09-09T23:59:59+07:00"),
         userId: userData[0].id,
