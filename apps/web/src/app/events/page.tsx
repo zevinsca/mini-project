@@ -4,7 +4,7 @@ interface Event {
   slug: string;
   name: string;
   eventDate: string;
-  imagePreview: string;
+  imagePreview: [{ imageUrl: string }];
 }
 
 export default async function EventsPage() {
@@ -39,7 +39,7 @@ export default async function EventsPage() {
             >
               <div className="relative h-56 w-full">
                 <Image
-                  src={event.imagePreview}
+                  src={event.imagePreview[0].imageUrl}
                   alt="Event Image"
                   fill
                   className="object-cover rounded-t-2xl"

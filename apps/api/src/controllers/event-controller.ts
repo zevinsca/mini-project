@@ -34,9 +34,11 @@ export async function getAllEvents(req: Request, res: Response) {
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
         organizer: `${item.User.firstName} ${item.User.lastName}`,
-        category: item.EventCategory.map((el) => {
-          return el.Category.name;
-        }),
+        category: item.EventCategory.map(
+          (el: { Category: { name: string } }) => {
+            return el.Category.name;
+          }
+        ),
       };
     });
 
