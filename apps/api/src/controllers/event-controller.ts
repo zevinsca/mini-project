@@ -3,12 +3,17 @@ import { prisma } from "../configs/prisma-config.js";
 
 import fs from "fs/promises";
 
-import { cloudinary } from "../configs/cloudinary-config.js";
+import cloudinary from "../configs/cloudinary-config.js";
 
 export async function getAllEvents(req: Request, res: Response) {
   try {
     const events = await prisma.event.findMany({
-      include: { EventCategory: { include: { Category: true } }, User: true },
+      include: {
+        EventCategory: { include: { Category: true } },
+        User: true,
+        imageContent: true,
+        imagePreview: true,
+      },
     });
 
     const allResult = events.map((item) => {
@@ -35,7 +40,7 @@ export async function getAllEvents(req: Request, res: Response) {
       };
     });
 
-    res.status(200).json({ data: allResult });
+    res.status(200).json({ data: allResult, rawData: events });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to get all events data" });
