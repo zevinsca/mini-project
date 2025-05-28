@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { IoClose, IoContractOutline } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 import Link from "next/link";
 import Image from "next/image";
+import SignOut from "./logout";
 
 // interface Category {
 //   objectId: string;
@@ -94,6 +95,7 @@ export default function Header() {
             {currentData ? (
               <div>
                 <p>{currentData.firstName} </p>
+                <SignOut />
               </div>
             ) : (
               <div>
