@@ -3,6 +3,7 @@ import "dotenv/config";
 import express, { Request, Response, Application } from "express";
 import authRouters from "./routers/auth-router.js";
 import eventRouters from "./routers/event-router.js";
+import imageRouters from "./routers/image-router.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -19,6 +20,7 @@ app.get("/api/v1/health", (_req: Request, res: Response) => {
 
 app.use("/api/v1/auth", authRouters);
 app.use("/api/v1/events", eventRouters);
+app.use("/api/v1/images", imageRouters);
 
 app.listen(PORT, () => {
   console.info(`Server is running on http://localhost:${PORT}`);

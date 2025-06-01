@@ -33,10 +33,7 @@ export default async function EventsPage() {
           const displayDate = `${datePart} • ${timePart}`;
 
           return (
-            <article
-              key={event.slug}
-              className="bg-white shadow-xl rounded-lg p-4"
-            >
+            <article key={event.slug} className="bg-white shadow-xl rounded-lg">
               <div className="relative h-56 w-full">
                 <Image
                   src={event.imagePreview[0].imageUrl}
@@ -45,9 +42,11 @@ export default async function EventsPage() {
                   className="object-cover rounded-t-2xl"
                 />
               </div>
-              <h2 className="text-black">{event.name}</h2>
-              <p>{displayDate}</p>
-              <Link href={`/events/${event.slug}`}>See more</Link>
+              <div className="p-4">
+                <h2 className="text-black">{event.name}</h2>
+                <p>{displayDate}</p>
+                <Link href={`/events/${event.slug}`}>See more</Link>
+              </div>
             </article>
           );
         })}

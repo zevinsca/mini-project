@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 interface Event {
   id: string;
-  title: string;
+  name: string;
   price: number;
   seat: number;
 }
@@ -60,7 +60,7 @@ export default function EventDetail({
       <div id="snap-container" className="fixed"></div>
 
       <div className="w-full max-w-80 flex flex-col gap-4 items-center">
-        <h2 className="text-2xl font-bold text-center">{event?.title}</h2>
+        <h2 className="text-2xl font-bold text-center">{event?.name}</h2>
         <div className="flex flex-col items-center">
           <p className="font-bold text-xl">Price</p>
           <p>Rp. {event?.price}</p>

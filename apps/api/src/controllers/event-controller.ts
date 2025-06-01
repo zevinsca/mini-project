@@ -59,3 +59,84 @@ export async function getEventById(req: Request, res: Response) {
     res.status(500).json({ message: "Failed to get article by id" });
   }
 }
+
+export async function createEvent(req: Request, res: Response) {
+  try {
+    const {
+      name,
+      shortDescription,
+      description,
+      eventDate,
+      location,
+      price,
+      stock,
+      salesStart,
+      salesEnd,
+    } = req.body;
+    const files = req.files as {
+      [key: string]: Express.Multer.File[];
+    };
+    const userId = req.user.id;
+
+    if (
+      !name ||
+      !shortDescription ||
+      !description ||
+      !eventDate ||
+      !location ||
+      !price ||
+      !stock ||
+      !salesStart ||
+      !salesEnd ||
+      !files ||
+      !userId
+    ) {
+      res.status(400).json({ message: "Missing required fields" });
+      return;
+    }
+
+    const imagePreviewData: { url: string }[] = [];
+    const imageContentData: { url: string }[] = [];
+
+    for (const key in files) {
+      for (const el of files[key]) {
+        const result = await cloudinary.uploader.upload(el.path, {
+          folder: "mini-project",
+        });
+
+        if (key === "imagePreview") {
+          imagePreviewData.push({ url: result.secure_url });
+        }
+
+        if (key === "imageContent") {
+          imageContentData.push({ url: result.secure_url });
+        }
+        await fs.unlink(el.path);
+      }
+    }
+
+    await prisma.event.create({
+      data: {
+        name,
+        shortDescription,
+        description,
+        eventDate: new Date(eventDate),
+        location,
+        price: parseFloat(price),
+        stock: parseInt(stock, 10),
+        salesStart: new Date(salesStart),
+        salesEnd: new Date(salesEnd),
+        userId,
+        ImagePreview: { create: imagePreviewData },
+        ImageContent: { create: imageContentData },
+        slug: name.toLowerCase().split(" ").join("-"),
+      },
+    });
+
+    res.status(201).json({ message: "Created new article" });
+  } catch (error) {
+    console.error(error);
+    console.error(error);
+    res.status(500).json({ message: "Cannot create new article" });
+  }
+}
