@@ -6,9 +6,9 @@ export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("accessToken")?.value;
   const pathname = req.nextUrl.pathname;
 
-  if (!accessToken && pathname !== "/auth/login") {
-    return NextResponse.redirect(`${req.nextUrl.origin}/auth/login`);
-  } else if (!accessToken && pathname === "/auth/login") {
+  console.log("Running middleware at:", pathname);
+
+  if (!accessToken && pathname.startsWith("/auth")) {
     return NextResponse.next();
   }
 
@@ -22,13 +22,13 @@ export async function middleware(req: NextRequest) {
   const role = payload.role;
 
   if (
-    (role === "CUSTOMER" && pathname.startsWith("/dashboard/customer")) ||
+    (role === "PARTICIPANT" && pathname.startsWith("/dashboard/participant")) ||
     (role === "EVENT_ORGANIZER" &&
       pathname.startsWith("/dashboard/event-organizer"))
   ) {
     return NextResponse.next();
   } else {
-    return new NextResponse("Forbidden acces", { status: 403 });
+    return new NextResponse("Forbidden access", { status: 403 });
   }
 }
 

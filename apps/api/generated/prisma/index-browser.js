@@ -215,6 +215,7 @@ exports.Prisma.DiscountScalarFieldEnum = {
 
 exports.Prisma.VoucherScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   code: 'code',
   usageLimit: 'usageLimit',
   eventId: 'eventId',
