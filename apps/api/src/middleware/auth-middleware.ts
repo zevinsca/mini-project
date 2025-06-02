@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
@@ -9,7 +12,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     return;
   }
 
-  const payload = jwt.verify(accesToken, "superdupersecret");
+  const payload = jwt.verify(accesToken, process.env.JWT_SECRET!);
 
   if (!payload) {
     res.status(401).json({ message: "Token verification failed" });

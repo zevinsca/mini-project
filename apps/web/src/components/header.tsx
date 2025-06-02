@@ -100,11 +100,11 @@ export default function Header() {
                     <ul className="text-sm text-gray-700">
                       <li>
                         <Link
-                          href="/dashboard"
+                          href={`/dashboard/${currentData.role === "PARTICIPANT" ? "participant" : "event-organizer"}`}
                           className="block px-4 py-2 hover:bg-gray-100"
                           onClick={() => setIsOpen(false)}
                         >
-                          Dashboard
+                          DASHBOARD
                         </Link>
                       </li>
                       <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
@@ -165,23 +165,30 @@ export default function Header() {
                 <Link href="/about">About</Link>
               </li>
               {currentData ? (
-                <div className="flex flex-col gap-5">
-                  <p>{currentData.email} </p>
-                  <LogOut />
+                <div className="flex flex-col gap-5 text-sm text-gray-700">
+                  <p>{currentData.email}</p>
+                  <Link
+                    href={`/dashboard/${currentData.role === "PARTICIPANT" ? "participant" : "event-organizer"}`}
+                    className="block px-4 py-2 rounded hover:bg-gray-100"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Account Info
+                  </Link>
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">
+                    <LogOut />
+                  </div>
                 </div>
               ) : (
-                <div>
-                  <nav>
-                    <ul className="flex flex-col gap-5">
-                      <li>
-                        <Link href="/auth/login">Login</Link>
-                      </li>
-                      <li>
-                        <Link href="/auth/register">Register</Link>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
+                <nav>
+                  <ul className="flex flex-col gap-5">
+                    <li>
+                      <Link href="/auth/login">Login</Link>
+                    </li>
+                    <li>
+                      <Link href="/auth/register">Register</Link>
+                    </li>
+                  </ul>
+                </nav>
               )}
             </ul>
           )}

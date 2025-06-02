@@ -23,4 +23,5 @@ export const registerSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "Password must contain one symbol"),
   phone: z.string().max(15, "invalid phone number"),
   referralCode: z.string().min(0, "invalid referal code"),
+  role: z.enum(["EVENT_ORGANIZER", "PARTICIPANT"]),
 });
