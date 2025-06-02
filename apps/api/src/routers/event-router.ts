@@ -1,10 +1,43 @@
 import express from "express";
 
-import { getAllEvents, getEventById } from "../controllers/event-controller.js";
+import {
+  createEvent,
+  getAllEvents,
+  getEventBySlug,
+} from "../controllers/event-controller.js";
+import { roleGuard, verifyToken } from "../middleware/auth-middleware.js";
+import { fileUpload } from "../middleware/file-upload-middleware.js";
 
 const router = express.Router();
 
-router.route("/").get(getAllEvents);
-router.route("/:eventId").get(getEventById);
+router
+  .route("/")
+  .get(getAllEvents)
+  .post(
+    verifyToken,
+    roleGuard("EVENT_ORGANIZER"),
+    fileUpload.fields([
+      { name: "imagePreview", maxCount: 3 },
+      { name: "imageContent", maxCount: 5 },
+    ]),
+    createEvent
+  );
+router.route("/:slug").get(getEventBySlug);
+
+// router
+//   .route("/")
+//   .get(verifyToken, getAllEvents)
+//   .post(
+//     verifyToken,
+//     roleGuard("EVENT_ORGANIZER"),
+//     fileUpload.fields([
+//       { name: "imagePreview", maxCount: 3 },
+//       { name: "imageContent", maxCount: 5 },
+//     ]),
+//     createEvent
+//   );
+// router
+//   .route("/:slug")
+//   .get(verifyToken, roleGuard("EVENT_ORGANIZER"), getEventBySlug);
 
 export default router;
