@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { IoClose, IoContractOutline } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 import Link from "next/link";
 import Image from "next/image";
+import LogOut from "./logout";
 
 // interface Category {
 //   objectId: string;
@@ -39,26 +40,7 @@ export default function Header() {
     }
 
     getCurrentUser();
-  }, []);
-
-  //   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  //   const [categories, setCategories] = useState([]);
-
-  //   useEffect(() => {
-  //     async function fetchCategories() {
-  //       try {
-  //         const res = await fetch(
-  //           "https://sacredreceipt-us.backendless.app/api/data/Categories"
-  //         );
-  //         const data = await res.json();
-  //         setCategories(data);
-  //       } catch (error) {
-  //         console.error("Failed to fetch categories:", error);
-  //       }
-  //     }
-
-  //     fetchCategories();
-  //   }, []);
+  });
 
   return (
     <header className="">
@@ -92,8 +74,45 @@ export default function Header() {
             </li>
 
             {currentData ? (
-              <div>
-                <p>{currentData.firstName} </p>
+              <div className="relative">
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="flex items-center gap-2 hover:text-blue-600"
+                >
+                  {currentData.email}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {isOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
+                    <ul className="text-sm text-gray-700">
+                      <li>
+                        <Link
+                          href={`/dashboard/${currentData.role === "PARTICIPANT" ? "participant" : "event-organizer"}`}
+                          className="block px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          DASHBOARD
+                        </Link>
+                      </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                        <LogOut />
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </div>
             ) : (
               <div>
@@ -109,32 +128,10 @@ export default function Header() {
                 </nav>
               </div>
             )}
-            {/* <div className="relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className=""
-              >
-                Categories
-              </button>
-              {isDropdownOpen && (
-                <ul className="absolute top-full right-0 mt-2 bg-white border rounded shadow-lg py-2 w-56 z-50">
-                  {categories.map((category: Category) => (
-                    <li key={category.objectId}>
-                      <Link
-                        href={`/categories/${category.name.toLowerCase()}`}
-                        className="block px-4 py-2 hover:bg-gray-100"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        {category.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div> */}
           </ul>
         </div>
       </nav>
+
       {/* Mobile Navigation */}
       <nav className="block md:hidden py-3 fixed left-0 right-0 top-0 bg-white z-50 shadow-md">
         <div className="px-5 flex justify-between items-center relative">
@@ -165,40 +162,34 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <Link href="/blog">Blog</Link>
-              </li>
-              <li>
                 <Link href="/about">About</Link>
               </li>
-              <li>
-                <Link href="/auth/login">Login</Link>
-              </li>
-              <li>
-                <Link href="/auth/register">Register</Link>
-              </li>
-              {/* <div className="relative ">
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className=""
-                >
-                  Categories
-                </button>
-                {isDropdownOpen && (
-                  <ul className="top-full right-0 mt-2  py-2 w-full bg-[#fe758c] text-white z-50 shadow-md">
-                    {categories.map((category: Category) => (
-                      <li key={category.objectId}>
-                        <Link
-                          href={`/categories/${category.name.toLowerCase()}`}
-                          className="block px-4 py-2 hover:bg-gray-100 active:bg-gray-100 active:text-black text-white"
-                          onClick={() => setIsDropdownOpen(false)}
-                        >
-                          {category.name}
-                        </Link>
-                      </li>
-                    ))}
+              {currentData ? (
+                <div className="flex flex-col gap-5 text-sm text-gray-700">
+                  <p>{currentData.email}</p>
+                  <Link
+                    href={`/dashboard/${currentData.role === "PARTICIPANT" ? "participant" : "event-organizer"}`}
+                    className="block px-4 py-2 rounded hover:bg-gray-100"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Account Info
+                  </Link>
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">
+                    <LogOut />
+                  </div>
+                </div>
+              ) : (
+                <nav>
+                  <ul className="flex flex-col gap-5">
+                    <li>
+                      <Link href="/auth/login">Login</Link>
+                    </li>
+                    <li>
+                      <Link href="/auth/register">Register</Link>
+                    </li>
                   </ul>
-                )}
-              </div> */}
+                </nav>
+              )}
             </ul>
           )}
         </div>
