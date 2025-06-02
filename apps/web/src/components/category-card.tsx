@@ -1,31 +1,36 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function CategoryCard(props: {
+type CategoryCardProps = {
   src: string;
   alt: string;
   title: string;
   href: string;
-}) {
+};
+
+export default function CategoryCard({
+  src,
+  alt,
+  title,
+  href,
+}: CategoryCardProps) {
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <Link
-        href={props.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="relative flex flex-col items-center justify-center "
+        href={href}
+        className="flex flex-col items-center justify-center"
+        aria-label={title}
       >
-        <div className="relative w-32 h-32 border rounded-full flex items-center justify-center">
-          <div className="relative w-16 h-16 overflow-hidden">
-            <Image
-              fill
-              className="object-cover"
-              src={props.src}
-              alt={props.alt}
-            />
-          </div>
+        <div className="relative w-24 h-24 border rounded-full overflow-hidden flex items-center justify-center">
+          <Image
+            src={src}
+            alt={alt}
+            className="object-cover "
+            width={50}
+            height={50}
+          />
         </div>
-        <p className="text-base justify-center pt-3">{props.title}</p>
+        <p className="text-base pt-3 text-center">{title}</p>
       </Link>
     </div>
   );

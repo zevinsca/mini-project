@@ -1,6 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+type Category = {
+  id: string;
+  name: string;
+};
 
 export default function CreateEventPage() {
   const [name, setName] = useState("");
@@ -16,6 +21,27 @@ export default function CreateEventPage() {
   const [imageContent, setImageContent] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/categories");
+        const data = await response.json();
+        setCategories(data.data || []); // Adjust based on your API response structure
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const options = Array.from(e.target.selectedOptions);
+    const values = options.map((opt) => opt.value);
+    setSelectedCategories(values);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +57,8 @@ export default function CreateEventPage() {
       !salesStart ||
       !salesEnd ||
       !imagePreview ||
-      !imageContent
+      !imageContent ||
+      selectedCategories.length === 0
     ) {
       setMessage("Please fill in all fields and upload images.");
       return;
@@ -47,6 +74,10 @@ export default function CreateEventPage() {
     formData.append("stock", stock);
     formData.append("salesStart", salesStart);
     formData.append("salesEnd", salesEnd);
+
+    selectedCategories.forEach((id) => {
+      formData.append("categories", id); // can append multiple values
+    });
 
     Array.from(imagePreview).forEach((file) => {
       formData.append("imagePreview", file);
@@ -83,6 +114,7 @@ export default function CreateEventPage() {
       setSalesEnd("");
       setImagePreview(null);
       setImageContent(null);
+      setSelectedCategories([]);
     } catch (error) {
       console.error(error);
       setMessage("Failed to create event.");
@@ -206,6 +238,28 @@ export default function CreateEventPage() {
             onChange={(e) => setSalesEnd(e.target.value)}
             required
           />
+        </div>
+
+        {/* Category Selection */}
+        <div>
+          <label className="block mb-1 font-semibold">Categories</label>
+          <select
+            multiple
+            value={selectedCategories}
+            onChange={handleCategoryChange}
+            className="w-full border rounded p-2"
+            required
+          >
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+          <p className="text-sm text-gray-600">
+            Hold down the Ctrl (Windows) or Cmd (Mac) key to select multiple
+            categories.
+          </p>
         </div>
 
         <div>
