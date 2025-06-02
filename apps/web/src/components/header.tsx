@@ -1,9 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { useRouter, useSearchParams } from "next/navigation";
-=======
->>>>>>> main
 import { IoClose } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Link from "next/link";

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import CategoryCard from "./category-card";
+import FilteredEventsSection from "./filtered-events-section";
 
 type Category = {
   id: string;
@@ -13,6 +14,7 @@ type Category = {
 export default function CategorySection() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -29,6 +31,14 @@ export default function CategorySection() {
 
     fetchCategories();
   }, []);
+
+  const handleCategoryClick = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+  };
+
+  const handleClearFilter = () => {
+    setSelectedCategory(null);
+  };
 
   if (loading) {
     return (
@@ -49,14 +59,35 @@ export default function CategorySection() {
       <p className="font-bold text-center text-3xl pb-10">Event Categories</p>
       <div className="grid lg:grid-cols-6 grid-cols-2 gap-3">
         {categories.map((category) => (
-          <CategoryCard
+          <div
             key={category.id}
-            href={`/categories/${category.name.toLowerCase()}`}
-            src={category.image}
-            alt={`${category.name} Category`}
-            title={category.name}
-          />
+            onClick={() => handleCategoryClick(category.name)}
+          >
+            <CategoryCard
+              href="#"
+              src={category.image}
+              alt={`${category.name} Category`}
+              title={category.name}
+            />
+          </div>
         ))}
+      </div>
+
+      {/* Clear Filter Button */}
+      {selectedCategory && (
+        <div className="mt-4 text-center">
+          <button
+            onClick={handleClearFilter}
+            className="bg-gray-300 px-4 py-2 rounded"
+          >
+            Show All Events
+          </button>
+        </div>
+      )}
+
+      {/* Show Events */}
+      <div className="mt-10">
+        <FilteredEventsSection category={selectedCategory || undefined} />
       </div>
     </section>
   );
