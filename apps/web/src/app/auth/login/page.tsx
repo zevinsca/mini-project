@@ -27,6 +27,7 @@ export default function LoginPage() {
 
       setLoginData({ username: "", password: "" });
 
+      window.location.href = "/";
       router.push("/");
     } catch (error) {
       console.error(error);

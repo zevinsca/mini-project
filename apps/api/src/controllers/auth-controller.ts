@@ -22,6 +22,7 @@ export async function register(req: Request, res: Response) {
       password,
       phone,
       referralCode: usedReferralCode,
+      role,
     } = registerSchema.parse(req.body);
 
     const salt = await bcrypt.genSalt(10);
@@ -56,6 +57,7 @@ export async function register(req: Request, res: Response) {
         password: hashedPassword,
         phone,
         referralCode,
+        role,
       },
     });
 
@@ -67,13 +69,14 @@ export async function register(req: Request, res: Response) {
 
       if (referrer) {
         const pointAmount = 10000; // reward amount
-        const expiredAt = new Date();
-        expiredAt.setDate(expiredAt.getDate() + 90); // expires in 90 days
+        const createdAt = new Date();
+        const expiredAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000); // 3 months
 
         await prisma.point.create({
           data: {
             userId: referrer.id,
             amount: pointAmount,
+            createdAt,
             expiredAt,
           },
         });
@@ -119,7 +122,7 @@ export async function login(req: Request, res: Response) {
         email: existingUser.email,
         role: existingUser.role,
       },
-      "superdupersecret"
+      process.env.JWT_SECRET as string
     );
 
     res

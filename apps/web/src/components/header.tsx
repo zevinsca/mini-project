@@ -1,10 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import { useRouter, useSearchParams } from "next/navigation";
+=======
+>>>>>>> main
 import { IoClose } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Link from "next/link";
 import Image from "next/image";
+import LogOut from "./logout";
 
 interface CurrentUser {
   id: string;
@@ -94,8 +98,45 @@ export default function Header() {
               <Link href="/about">About</Link>
             </li>
             {currentData ? (
-              <div>
-                <p>{currentData.firstName}</p>
+              <div className="relative">
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="flex items-center gap-2 hover:text-blue-600"
+                >
+                  {currentData.email}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {isOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
+                    <ul className="text-sm text-gray-700">
+                      <li>
+                        <Link
+                          href={`/dashboard/${currentData.role === "PARTICIPANT" ? "participant" : "event-organizer"}`}
+                          className="block px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          DASHBOARD
+                        </Link>
+                      </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                        <LogOut />
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </div>
             ) : (
               <div>
@@ -140,7 +181,9 @@ export default function Header() {
                 <Link href="/">Home</Link>
               </li>
               <li>
-                <Link href="/events">Events</Link>
+                <Link href="/events" className="">
+                  Events
+                </Link>
               </li>
               <li>
                 <Link href="/about">About</Link>
@@ -163,6 +206,32 @@ export default function Header() {
                   />
                 </form>
               </li>
+              {currentData ? (
+                <div className="flex flex-col gap-5 text-sm text-gray-700">
+                  <p>{currentData.email}</p>
+                  <Link
+                    href={`/dashboard/${currentData.role === "PARTICIPANT" ? "participant" : "event-organizer"}`}
+                    className="block px-4 py-2 rounded hover:bg-gray-100"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Account Info
+                  </Link>
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">
+                    <LogOut />
+                  </div>
+                </div>
+              ) : (
+                <nav>
+                  <ul className="flex flex-col gap-5">
+                    <li>
+                      <Link href="/auth/login">Login</Link>
+                    </li>
+                    <li>
+                      <Link href="/auth/register">Register</Link>
+                    </li>
+                  </ul>
+                </nav>
+              )}
             </ul>
           )}
         </div>

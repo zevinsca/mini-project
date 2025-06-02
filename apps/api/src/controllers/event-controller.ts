@@ -8,7 +8,12 @@ import cloudinary from "../configs/cloudinary-config.js";
 export async function getAllEvents(req: Request, res: Response) {
   try {
     // Read query params
-    const { search = "", page = "1", perPage = "6" } = req.query;
+    const {
+      search = "",
+      page = "1",
+      perPage = "6",
+      category = "all",
+    } = req.query;
 
     // Parse and validate page and perPage
     const currentPage = parseInt(page as string, 10) || 1;
@@ -20,7 +25,7 @@ export async function getAllEvents(req: Request, res: Response) {
     // Split search query into keywords (space separated)
     const keywords = (search as string).split(/\s+/).filter(Boolean);
 
-    // Build dynamic OR filter for multiple fields
+    // Build dynamic OR filter for search
     const searchConditions =
       keywords.length > 0
         ? {
@@ -33,14 +38,33 @@ export async function getAllEvents(req: Request, res: Response) {
           }
         : {};
 
+    // Build category filter (if any)
+    const categoryCondition =
+      category !== "all"
+        ? {
+            EventCategory: {
+              some: {
+                Category: {
+                  name: { equals: category, mode: "insensitive" },
+                },
+              },
+            },
+          }
+        : {};
+
+    // Combine filters
+    const combinedWhere = {
+      AND: [searchConditions, categoryCondition],
+    };
+
     // Count total events (filtered)
     const totalCount = await prisma.event.count({
-      where: searchConditions,
+      where: combinedWhere,
     });
 
     // Fetch paginated events
     const events = await prisma.event.findMany({
-      where: searchConditions,
+      where: combinedWhere,
       include: {
         EventCategory: { include: { Category: true } },
         User: true,
