@@ -32,12 +32,8 @@ export default function CategorySection() {
     fetchCategories();
   }, []);
 
-  const handleCategoryClick = (categoryName: string) => {
+  const handleCategoryClick = (categoryName: string | null) => {
     setSelectedCategory(categoryName);
-  };
-
-  const handleClearFilter = () => {
-    setSelectedCategory(null);
   };
 
   if (loading) {
@@ -57,7 +53,18 @@ export default function CategorySection() {
       id="category-section"
     >
       <p className="font-bold text-center text-3xl pb-10">Event Categories</p>
-      <div className="grid lg:grid-cols-6 grid-cols-2 gap-3">
+      <div className="grid lg:grid-cols-7 grid-cols-2 gap-3">
+        {/* Show All Events Card */}
+        <div onClick={() => handleCategoryClick(null)}>
+          <CategoryCard
+            href="#"
+            src="https://res.cloudinary.com/dzdcqjvtc/image/upload/v1748855050/placard_tn5zlk.png" // replace with your placeholder image
+            alt="Show All Events"
+            title="Show All"
+          />
+        </div>
+
+        {/* Category Cards */}
         {categories.map((category) => (
           <div
             key={category.id}
@@ -72,18 +79,6 @@ export default function CategorySection() {
           </div>
         ))}
       </div>
-
-      {/* Clear Filter Button */}
-      {selectedCategory && (
-        <div className="mt-4 text-center">
-          <button
-            onClick={handleClearFilter}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Show All Events
-          </button>
-        </div>
-      )}
 
       {/* Show Events */}
       <div className="mt-10">

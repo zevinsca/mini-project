@@ -4,9 +4,12 @@ import {
   createEvent,
   getAllEvents,
   getEventBySlug,
+  getEventByUserId,
+  deleteEventById,
 } from "../controllers/event-controller.js";
 import { roleGuard, verifyToken } from "../middleware/auth-middleware.js";
 import { fileUpload } from "../middleware/file-upload-middleware.js";
+import { get } from "http";
 
 const router = express.Router();
 
@@ -22,7 +25,12 @@ router
     ]),
     createEvent
   );
+
+router.route("/my-events").get(verifyToken, getEventByUserId);
 router.route("/:slug").get(getEventBySlug);
+router
+  .route("/:eventId")
+  .delete(verifyToken, roleGuard("EVENT_ORGANIZER"), deleteEventById);
 
 // router
 //   .route("/")

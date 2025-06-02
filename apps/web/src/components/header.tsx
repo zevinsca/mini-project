@@ -91,9 +91,9 @@ export default function Header() {
             <li>
               <Link href="/events">Events</Link>
             </li>
-            <li>
+            {/* <li>
               <Link href="/about">About</Link>
-            </li>
+            </li> */}
             {currentData ? (
               <div className="relative">
                 <button
@@ -182,9 +182,9 @@ export default function Header() {
                   Events
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/about">About</Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/auth/login">Login</Link>
               </li>
