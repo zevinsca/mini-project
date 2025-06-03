@@ -10,6 +10,7 @@ import transactionRouter from "./routers/transaction-router.js";
 import userRouter from "./routers/user-router.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import discountRouter from "./routers/discount-router.js";
 
 const app: Application = express();
 const PORT: number = 8000;
@@ -28,6 +29,7 @@ app.use("/api/v1/images", imageRouters);
 app.use("/api/v1/categories", categoryRouters);
 app.use("/api/v1/transactions", transactionRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/discounts", discountRouter);
 
 app.listen(PORT, () => {
   console.info(`Server is running on http://localhost:${PORT}`);

@@ -9,7 +9,6 @@ import {
 } from "../controllers/event-controller.js";
 import { roleGuard, verifyToken } from "../middleware/auth-middleware.js";
 import { fileUpload } from "../middleware/file-upload-middleware.js";
-import { get } from "http";
 
 const router = express.Router();
 

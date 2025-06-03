@@ -91,11 +91,12 @@ export default function Dashboard() {
                 </td>
                 <td className="py-2 px-4">{event.location}</td>
                 <td className="py-2 px-4">
-                  <input
-                    type="text"
-                    placeholder="Coupon Code"
-                    className="border rounded px-2 py-1 w-full"
-                  />
+                  <Link
+                    href={`/dashboard/event-organizer/add-discount/${event.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Add Discount
+                  </Link>
                 </td>
                 <td className="py-2 px-4">
                   <button
