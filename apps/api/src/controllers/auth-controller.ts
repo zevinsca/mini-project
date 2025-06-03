@@ -123,7 +123,7 @@ export async function login(req: Request, res: Response) {
         role: existingUser.role,
         referralCode: existingUser.referralCode,
       },
-      "superdupersecret"
+      process.env.JWT_SECRET as string
     );
 
     res

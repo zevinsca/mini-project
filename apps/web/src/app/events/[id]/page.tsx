@@ -21,13 +21,39 @@ interface Event {
   EventCategory: { Category: { name: string } }[];
 }
 
+function loadSnapScript(clientKey: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // Check if it's already loaded
+    if (
+      document.querySelector(
+        'script[src="https://app.sandbox.midtrans.com/snap/snap.js"]'
+      )
+    ) {
+      console.log("Snap.js already loaded!");
+      resolve();
+      return;
+    }
+
+    // Create and append the script
+    const script = document.createElement("script");
+    script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.setAttribute("data-client-key", clientKey);
+    script.onload = () => {
+      console.log("Snap.js loaded successfully!");
+      resolve();
+    };
+    script.onerror = () => reject(new Error("Failed to load Snap.js"));
+    document.body.appendChild(script);
+  });
+}
+
 export default function EventDetail({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const [event, setEvent] = useState<Event | null>(null);
-  const [totalTicket, setTotalTicket] = useState(0);
+  const [ticketAmount, setTicketAmount] = useState(1);
 
   useEffect(() => {
     async function getEvent() {
@@ -48,6 +74,16 @@ export default function EventDetail({
     getEvent();
   }, []);
 
+  useEffect(() => {
+    const myMidtransClientKey =
+      process.env.NEXT_PUBLIC_MIDTRANS_SANDBOX_CLIENT_KEY;
+    const script = document.createElement("script");
+    script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.setAttribute("data-client-key", myMidtransClientKey as string);
+
+    document.body.appendChild(script);
+  }, []);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -58,7 +94,7 @@ export default function EventDetail({
       },
       body: JSON.stringify({
         eventId: event?.id,
-        totalTicket: totalTicket,
+        ticketAmount: ticketAmount,
       }),
       credentials: "include",
     });
@@ -66,11 +102,14 @@ export default function EventDetail({
     const data = await res.json();
 
     console.log(data);
+
+    // window.snap.embed(data.data.midtransTransaction.token);
+    window.snap.pay(data.data.midtransTransaction.token);
   }
 
   return (
     <main className="pt-24 pb-10">
-      <div id="snap-container" className="fixed"></div>
+      {/* <div id="snap-container" className="fixed w-full z-50 h-full"></div> */}
 
       <div className="w-full flex flex-col gap-4">
         {event && (
@@ -164,18 +203,19 @@ export default function EventDetail({
                     <button
                       type="button"
                       className="p-4 border"
+                      value={ticketAmount}
                       onClick={() =>
-                        setTotalTicket((prev) => Math.max(prev - 1, 0))
+                        setTicketAmount((prev) => Math.max(prev - 1, 0))
                       }
                     >
                       -
                     </button>
-                    <span className="text-lg">{totalTicket}</span>
+                    <span className="text-lg">{ticketAmount}</span>
                     <button
                       type="button"
                       className="p-4 border"
                       onClick={() =>
-                        setTotalTicket((prev) =>
+                        setTicketAmount((prev) =>
                           Math.min(prev + 1, event.stock)
                         )
                       }

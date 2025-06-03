@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import CategoryCard from "./category-card";
+import FilteredEventsSection from "./filtered-events-section";
 
 type Category = {
   id: string;
@@ -13,6 +14,7 @@ type Category = {
 export default function CategorySection() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -29,6 +31,10 @@ export default function CategorySection() {
 
     fetchCategories();
   }, []);
+
+  const handleCategoryClick = (categoryName: string | null) => {
+    setSelectedCategory(categoryName);
+  };
 
   if (loading) {
     return (
@@ -47,16 +53,36 @@ export default function CategorySection() {
       id="category-section"
     >
       <p className="font-bold text-center text-3xl pb-10">Event Categories</p>
-      <div className="grid lg:grid-cols-6 grid-cols-2 gap-3">
-        {categories.map((category) => (
+      <div className="grid lg:grid-cols-7 grid-cols-2 gap-3">
+        {/* Show All Events Card */}
+        <div onClick={() => handleCategoryClick(null)}>
           <CategoryCard
-            key={category.id}
-            href={`/categories/${category.name.toLowerCase()}`}
-            src={category.image}
-            alt={`${category.name} Category`}
-            title={category.name}
+            href="#"
+            src="https://res.cloudinary.com/dzdcqjvtc/image/upload/v1748855050/placard_tn5zlk.png" // replace with your placeholder image
+            alt="Show All Events"
+            title="Show All"
           />
+        </div>
+
+        {/* Category Cards */}
+        {categories.map((category) => (
+          <div
+            key={category.id}
+            onClick={() => handleCategoryClick(category.name)}
+          >
+            <CategoryCard
+              href="#"
+              src={category.image}
+              alt={`${category.name} Category`}
+              title={category.name}
+            />
+          </div>
         ))}
+      </div>
+
+      {/* Show Events */}
+      <div className="mt-10">
+        <FilteredEventsSection category={selectedCategory || undefined} />
       </div>
     </section>
   );

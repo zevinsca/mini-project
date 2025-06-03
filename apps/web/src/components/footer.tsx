@@ -44,9 +44,9 @@ export default async function Footer() {
                 </Link>
               </li>
 
-              <li>
+              {/* <li>
                 <Link href="/about">About</Link>
-              </li>
+              </li> */}
             </ul>
             {/* <ul className="flex flex-col pt-5 lg:items-start items-center">
               <p className="px-4 font-bold pb-3">CATEGORIES</p>

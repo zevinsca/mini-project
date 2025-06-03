@@ -8,7 +8,12 @@ import cloudinary from "../configs/cloudinary-config.js";
 export async function getAllEvents(req: Request, res: Response) {
   try {
     // Read query params
-    const { search = "", page = "1", perPage = "6" } = req.query;
+    const {
+      search = "",
+      page = "1",
+      perPage = "6",
+      category = "all",
+    } = req.query;
 
     // Parse and validate page and perPage
     const currentPage = parseInt(page as string, 10) || 1;
@@ -20,7 +25,7 @@ export async function getAllEvents(req: Request, res: Response) {
     // Split search query into keywords (space separated)
     const keywords = (search as string).split(/\s+/).filter(Boolean);
 
-    // Build dynamic OR filter for multiple fields
+    // Build dynamic OR filter for search
     const searchConditions =
       keywords.length > 0
         ? {
@@ -33,14 +38,33 @@ export async function getAllEvents(req: Request, res: Response) {
           }
         : {};
 
+    // Build category filter (if any)
+    const categoryCondition =
+      category !== "all"
+        ? {
+            EventCategory: {
+              some: {
+                Category: {
+                  name: { equals: category, mode: "insensitive" },
+                },
+              },
+            },
+          }
+        : {};
+
+    // Combine filters
+    const combinedWhere = {
+      AND: [searchConditions, categoryCondition],
+    };
+
     // Count total events (filtered)
     const totalCount = await prisma.event.count({
-      where: searchConditions,
+      where: combinedWhere,
     });
 
     // Fetch paginated events
     const events = await prisma.event.findMany({
-      where: searchConditions,
+      where: combinedWhere,
       include: {
         EventCategory: { include: { Category: true } },
         User: true,
@@ -128,8 +152,6 @@ export async function createEvent(req: Request, res: Response) {
     };
     const userId = req.user.id;
 
-    console.log(userId);
-
     if (
       !name ||
       !shortDescription ||
@@ -168,6 +190,12 @@ export async function createEvent(req: Request, res: Response) {
       }
     }
 
+    let newCategories = categories;
+
+    if (typeof newCategories == "string") {
+      newCategories = [newCategories];
+    }
+
     await prisma.event.create({
       data: {
         name,
@@ -185,7 +213,7 @@ export async function createEvent(req: Request, res: Response) {
         imageContent: { create: imageContentData },
         slug: name.toLowerCase().split(" ").join("-"),
         EventCategory: {
-          create: categories.map((categoryId: string) => ({
+          create: newCategories.map((categoryId: string) => ({
             categoryId,
           })),
         },
@@ -196,5 +224,61 @@ export async function createEvent(req: Request, res: Response) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Cannot create new event" });
+  }
+}
+
+export async function deleteEventById(req: Request, res: Response) {
+  try {
+    const eventId = req.params.eventId;
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    const eventData = await prisma.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (eventData?.userId === userId || userRole === "EVENT_ORGANIZER") {
+      await prisma.event.delete({ where: { id: eventId } });
+      res.status(200).json({ message: "Event has been deleted!" });
+
+      return;
+    }
+
+    res.status(403).json({ message: "unauthorized to delete this event" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to delete event" });
+  }
+}
+
+export async function getEventByUserId(req: Request, res: Response) {
+  try {
+    const userId = req.user.id;
+
+    const events = await prisma.event.findMany({
+      where: { userId },
+      include: {
+        EventCategory: { include: { Category: true } },
+        User: true,
+        imageContent: true,
+        imagePreview: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const allResult = events.map((item) => ({
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      shortDescription: item.shortDescription,
+      description: item.description,
+      eventDate: item.eventDate,
+      location: item.location,
+    }));
+
+    res.status(200).json({ data: allResult });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to get event by user ID" });
   }
 }

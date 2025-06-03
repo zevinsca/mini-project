@@ -1,14 +1,17 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config();
 
 import express, { Request, Response, Application } from "express";
 import authRouters from "./routers/auth-router.js";
 import eventRouters from "./routers/event-router.js";
 import categoryRouters from "./routers/category-router.js";
 import imageRouters from "./routers/image-router.js";
+import transactionRouter from "./routers/transaction-router.js";
 import userRouter from "./routers/user-router.js";
 import statsRouter from "./routers/stats-router.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import discountRouter from "./routers/discount-router.js";
 
 const app: Application = express();
 const PORT: number = 8000;
@@ -30,8 +33,13 @@ app.use("/api/v1/auth", authRouters);
 app.use("/api/v1/events", eventRouters);
 app.use("/api/v1/images", imageRouters);
 app.use("/api/v1/categories", categoryRouters);
+app.use("/api/v1/transactions", transactionRouter);
 app.use("/api/v1/user", userRouter);
+<<<<<<< HEAD
+app.use("/api/v1/discounts", discountRouter);
+=======
 app.use("/api/v1/stats", statsRouter);
+>>>>>>> main
 
 app.listen(PORT, () => {
   console.info(`Server is running on http://localhost:${PORT}`);
