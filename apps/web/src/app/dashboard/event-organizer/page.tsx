@@ -11,7 +11,7 @@ export default function Dashboard() {
       <DateRangePicker />
 
       <Link
-        href="/organizer/create-event"
+        href="/dashboard/event-organizer/create-event"
         className="flex flex-col items-center text-black hover:text-gray-600"
       >
         <span className="text-5xl font-light text-[#FFA500]">+</span>
