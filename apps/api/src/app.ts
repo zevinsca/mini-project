@@ -8,6 +8,7 @@ import categoryRouters from "./routers/category-router.js";
 import imageRouters from "./routers/image-router.js";
 import transactionRouter from "./routers/transaction-router.js";
 import userRouter from "./routers/user-router.js";
+import statsRouter from "./routers/stats-router.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import discountRouter from "./routers/discount-router.js";
@@ -17,7 +18,12 @@ const PORT: number = 8000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.get("/api/v1/health", (_req: Request, res: Response) => {
   res.status(200).json({ message: "API running" });
@@ -29,7 +35,11 @@ app.use("/api/v1/images", imageRouters);
 app.use("/api/v1/categories", categoryRouters);
 app.use("/api/v1/transactions", transactionRouter);
 app.use("/api/v1/user", userRouter);
+<<<<<<< HEAD
 app.use("/api/v1/discounts", discountRouter);
+=======
+app.use("/api/v1/stats", statsRouter);
+>>>>>>> main
 
 app.listen(PORT, () => {
   console.info(`Server is running on http://localhost:${PORT}`);

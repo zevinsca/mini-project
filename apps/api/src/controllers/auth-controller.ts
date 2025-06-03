@@ -121,6 +121,7 @@ export async function login(req: Request, res: Response) {
         username: existingUser.username,
         email: existingUser.email,
         role: existingUser.role,
+        referralCode: existingUser.referralCode,
       },
       process.env.JWT_SECRET as string
     );

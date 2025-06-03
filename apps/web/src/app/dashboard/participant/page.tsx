@@ -50,7 +50,7 @@ export default function ParticipantPage() {
   useEffect(() => {
     fetch("http://localhost:8000/api/v1/user/current-user", {
       method: "GET",
-      credentials: "include",
+      credentials: "include", // ✅ Important to include cookies
     })
       .then((res) => res.json())
       .then((data) => {

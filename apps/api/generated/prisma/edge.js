@@ -260,7 +260,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/zevinscajodie/Documents/jcwd-3304/mini-project/apps/api/generated/prisma",
+      "value": "/home/nahla/Purwadhika-2025/03-back-end/project/mini-project/apps/api/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -269,7 +269,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "debian-openssl-3.0.x",
         "native": true
       },
       {
@@ -282,7 +282,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/zevinscajodie/Documents/jcwd-3304/mini-project/apps/api/prisma/schema.prisma",
+    "sourceFilePath": "/home/nahla/Purwadhika-2025/03-back-end/project/mini-project/apps/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
